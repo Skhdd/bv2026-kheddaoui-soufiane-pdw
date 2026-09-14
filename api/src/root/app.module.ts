@@ -1,8 +1,15 @@
 import { Module } from '@nestjs/common';
-import { HealthModule } from '../core/health/health.module.js';
+import { ConfigModule } from '@nestjs/config';
+import { validate } from '../common/config/env.validation.js';
+import { HealthModule } from '../core/health/index.js';
 
 @Module({
-  imports: [HealthModule],
-
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate,
+    }),
+    HealthModule,
+  ],
 })
 export class AppModule {}
