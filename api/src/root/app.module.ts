@@ -1,15 +1,16 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { validate } from '../common/config/env.validation.js';
-import { HealthModule } from '../core/health/index.js';
+import { DynamicModule, Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AppConfigModule } from '@common/config/app-config.module';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validate,
-    }),
-    HealthModule,
-  ],
-})
-export class AppModule {}
+@Module({})
+export class AppModule {
+  static register(): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [AppConfigModule.register()],
+      controllers: [AppController],
+      providers: [AppService],
+    };
+  }
+}

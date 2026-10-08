@@ -1,15 +1,14 @@
+import { EnvService } from '@common/config/env.service';
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
-import { AppModule } from './root/app.module.js';
-import { ConfigKey } from './common/config/config.keys.js';
+import { AppModule } from '@root/app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+const bootstrap = async () => {
+  const app = await NestFactory.create(AppModule.register());
+  const envService: EnvService = app.get(EnvService);
+  await app.listen(envService.appPort);
+};
 
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>(ConfigKey.AppPort);
-
-  await app.listen(port ?? 3000);
-  console.log(`l'application est éxecute sur http://localhost:${port}`);
-}
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Error starting the application:', err);
+  process.exit(1);
+});
