@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { AppMode } from '../data/enum';
+import { AppMode, LogLevel } from '../data/enum';
+
 const appModeSchema = z
   .enum(['DEV', 'TEST', 'PROD', 'development', 'test', 'production'])
   .transform((value) => {
@@ -19,8 +20,24 @@ const appModeSchema = z
   });
 
 const environmentSchema = z.object({
-  APP_PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   NODE_ENV: appModeSchema,
+
+  APP_NAME: z.string().min(1).default('api'),
+
+  APP_PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+
+  APP_BASE_URL: z.string().default('api'),
+
+  APP_CORS_ORIGIN: z.string().default('http://localhost:4200'),
+
+  APP_TRUST_PROXY: z
+    .string()
+    .default('false')
+    .transform((value) => value === 'true'),
+
+  APP_HTTP_PAYLOAD_ERROR_CODE: z.coerce.number().int().default(422),
+
+  LOG_LEVEL: z.nativeEnum(LogLevel).default(LogLevel.Debug),
 });
 
 export type ValidatedEnvironment = z.infer<typeof environmentSchema>;

@@ -1,5 +1,29 @@
 export enum ConfigKey {
   NodeEnv = 'NODE_ENV',
+
+  AppName = 'APP_NAME',
+  AppPort = 'APP_PORT',
+  AppBaseUrl = 'APP_BASE_URL',
+  AppCorsOrigin = 'APP_CORS_ORIGIN',
+  AppTrustProxy = 'APP_TRUST_PROXY',
+  AppHttpPayloadErrorCode = 'APP_HTTP_PAYLOAD_ERROR_CODE',
+
   LogLevel = 'LOG_LEVEL',
-  Port = 'APP_PORT',
+
+  SwaggerEnabled = 'SWAGGER_ENABLED',
+  SwaggerTitle = 'SWAGGER_TITLE',
+  SwaggerDescription = 'SWAGGER_DESCRIPTION',
+  SwaggerVersion = 'SWAGGER_VERSION',
+  SwaggerPath = 'SWAGGER_PATH',
+
+  DbType = 'DB_TYPE',
+  DbHost = 'DB_HOST',
+  DbPort = 'DB_PORT',
+  DbUser = 'DB_USER',
+  DbPassword = 'DB_PASSWORD',
+  DbDatabase = 'DB_DATABASE',
+  DbSync = 'DB_SYNC',
+  DbMigration = 'DB_MIGRATION',
+  DbLog = 'DB_LOG',
+  DbSchema = 'DB_SCHEMA',
 }
