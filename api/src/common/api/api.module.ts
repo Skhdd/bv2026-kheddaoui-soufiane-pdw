@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
+import { ApiExceptionFilter } from './filter';
 import { ApiResponseInterceptor } from './interceptor';
 
 @Global()
@@ -9,6 +10,10 @@ import { ApiResponseInterceptor } from './interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: ApiResponseInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ApiExceptionFilter,
     },
   ],
 })
