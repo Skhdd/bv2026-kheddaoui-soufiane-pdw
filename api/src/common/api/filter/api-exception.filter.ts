@@ -7,11 +7,7 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 
-import {
-  ApiCodeResponse,
-  ApiException,
-  ApiResponse,
-} from '../data';
+import { ApiCodeResponse, ApiException, ApiResponse } from '../data';
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {

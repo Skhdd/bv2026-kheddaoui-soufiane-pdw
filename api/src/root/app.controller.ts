@@ -13,9 +13,7 @@ export class AppController {
   }
 
   @Post('test-validation')
-  testValidation(
-    @Body() body: TestValidationDto,
-  ): TestValidationDto {
+  testValidation(@Body() body: TestValidationDto): TestValidationDto {
     return body;
   }
 }

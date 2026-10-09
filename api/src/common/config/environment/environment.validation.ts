@@ -39,19 +39,18 @@ const environmentSchema = z.object({
 
   LOG_LEVEL: z.nativeEnum(LogLevel).default(LogLevel.Debug),
 
-SWAGGER_ENABLED: z
-  .string()
-  .default('true')
-  .transform((value) => value === 'true'),
+  SWAGGER_ENABLED: z
+    .string()
+    .default('true')
+    .transform((value) => value === 'true'),
 
-SWAGGER_TITLE: z.string().min(1).default('API'),
+  SWAGGER_TITLE: z.string().min(1).default('API'),
 
-SWAGGER_DESCRIPTION: z.string().min(1).default('HTTP API'),
+  SWAGGER_DESCRIPTION: z.string().min(1).default('HTTP API'),
 
-SWAGGER_VERSION: z.string().min(1).default('0.1.0'),
+  SWAGGER_VERSION: z.string().min(1).default('0.1.0'),
 
-SWAGGER_PATH: z.string().min(1).default('docs'),
-  
+  SWAGGER_PATH: z.string().min(1).default('docs'),
 });
 
 export type ValidatedEnvironment = z.infer<typeof environmentSchema>;
