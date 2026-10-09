@@ -1,14 +1,22 @@
-import { EnvService } from '@common/config/env.service';
 import { NestFactory } from '@nestjs/core';
+import { Logger } from 'nestjs-pino';
+
+import { EnvService } from '@common/config';
 import { AppModule } from '@root/app.module';
 
-const bootstrap = async () => {
-  const app = await NestFactory.create(AppModule.register());
-  const envService: EnvService = app.get(EnvService);
-  await app.listen(envService.appPort);
-};
+async function bootstrap(): Promise<void> {
+  const app = await NestFactory.create(AppModule.register(), {
+    bufferLogs: true,
+  });
 
-bootstrap().catch((err) => {
-  console.error('Error starting the application:', err);
-  process.exit(1);
-});
+  app.useLogger(app.get(Logger));
+  app.flushLogs();
+
+  app.enableShutdownHooks();
+
+  const envService = app.get(EnvService);
+
+  await app.listen(envService.appPort);
+}
+
+void bootstrap();
