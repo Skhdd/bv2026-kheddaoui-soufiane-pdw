@@ -38,6 +38,20 @@ const environmentSchema = z.object({
   APP_HTTP_PAYLOAD_ERROR_CODE: z.coerce.number().int().default(422),
 
   LOG_LEVEL: z.nativeEnum(LogLevel).default(LogLevel.Debug),
+
+SWAGGER_ENABLED: z
+  .string()
+  .default('true')
+  .transform((value) => value === 'true'),
+
+SWAGGER_TITLE: z.string().min(1).default('API'),
+
+SWAGGER_DESCRIPTION: z.string().min(1).default('HTTP API'),
+
+SWAGGER_VERSION: z.string().min(1).default('0.1.0'),
+
+SWAGGER_PATH: z.string().min(1).default('docs'),
+  
 });
 
 export type ValidatedEnvironment = z.infer<typeof environmentSchema>;

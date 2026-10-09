@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ValidatedEnvironment } from './environment/environment.validation';
 import { ConfigService } from '@nestjs/config';
+
 import { AppMode, ConfigKey, LogLevel } from './data/enum';
+import { ValidatedEnvironment } from './environment/environment.validation';
+
 @Injectable()
 export class EnvService {
   constructor(
@@ -39,6 +41,27 @@ export class EnvService {
   get logLevel(): LogLevel {
     return this.get(ConfigKey.LogLevel);
   }
+
+  get swaggerEnabled(): boolean {
+    return this.get(ConfigKey.SwaggerEnabled);
+  }
+
+  get swaggerTitle(): string {
+    return this.get(ConfigKey.SwaggerTitle);
+  }
+
+  get swaggerDescription(): string {
+    return this.get(ConfigKey.SwaggerDescription);
+  }
+
+  get swaggerVersion(): string {
+    return this.get(ConfigKey.SwaggerVersion);
+  }
+
+  get swaggerPath(): string {
+    return this.get(ConfigKey.SwaggerPath);
+  }
+
   get isProduction(): boolean {
     return this.appMode === AppMode.Prod;
   }
