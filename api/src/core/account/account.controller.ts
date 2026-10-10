@@ -1,5 +1,13 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { ParseUlidPipe } from '@common/database';
 
@@ -13,8 +21,13 @@ export class AccountController {
 
   @Post()
   @ApiOperation({ summary: 'Créer un compte' })
+  @ApiCreatedResponse({
+    description: 'compte créé',
+    type: AccountResponseDto,
+  })
   async create(): Promise<AccountResponseDto> {
-    // création en base puis conversion en dto
+    // création du compte en base
+
     const account = await this.accountService.create();
 
     return AccountResponseDto.fromEntity(account);
@@ -22,6 +35,20 @@ export class AccountController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Récupérer un compte' })
+  @ApiParam({
+    name: 'id',
+    description: 'identifiant ulid du compte',
+  })
+  @ApiOkResponse({
+    description: 'compte trouvé',
+    type: AccountResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'identifiant invalide',
+  })
+  @ApiNotFoundResponse({
+    description: 'compte introuvable',
+  })
   async findOne(
     @Param('id', ParseUlidPipe) id: string,
   ): Promise<AccountResponseDto> {
