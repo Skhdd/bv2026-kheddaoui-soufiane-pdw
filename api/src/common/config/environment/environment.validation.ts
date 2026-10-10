@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AppMode, LogLevel } from '../data/enum';
+import { AppMode, DatabaseType, LogLevel } from '../data/enum';
 
 const appModeSchema = z
   .enum(['DEV', 'TEST', 'PROD', 'development', 'test', 'production'])
@@ -51,6 +51,35 @@ const environmentSchema = z.object({
   SWAGGER_VERSION: z.string().min(1).default('0.1.0'),
 
   SWAGGER_PATH: z.string().min(1).default('docs'),
+
+  DB_TYPE: z.nativeEnum(DatabaseType).default(DatabaseType.Postgres),
+
+  DB_HOST: z.string().min(1).default('localhost'),
+
+  DB_PORT: z.coerce.number().int().min(1).max(65535).default(5432),
+
+  DB_USER: z.string().min(1).default('postgres'),
+
+  DB_PASSWORD: z.string().min(1),
+
+  DB_DATABASE: z.string().min(1).default('hoos'),
+
+  DB_SYNC: z
+    .string()
+    .default('false')
+    .transform((value) => value === 'true'),
+
+  DB_MIGRATION: z
+    .string()
+    .default('false')
+    .transform((value) => value === 'true'),
+
+  DB_LOG: z
+    .string()
+    .default('false')
+    .transform((value) => value === 'true'),
+
+  DB_SCHEMA: z.string().min(1).default('public'),
 });
 
 export type ValidatedEnvironment = z.infer<typeof environmentSchema>;
