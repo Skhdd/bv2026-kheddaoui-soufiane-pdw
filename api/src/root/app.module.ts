@@ -4,7 +4,7 @@ import { ApiModule } from '@common/api';
 import { AppConfigModule } from '@common/config';
 import { DatabaseModule } from '@common/database';
 import { ApplicationLifecycleLogger, LoggingModule } from '@common/logging';
-
+import { AccountModule } from '@core/account';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -18,6 +18,7 @@ export class AppModule {
         LoggingModule,
         ApiModule,
         DatabaseModule,
+        AccountModule,
       ],
       controllers: [AppController],
       providers: [AppService, ApplicationLifecycleLogger],
