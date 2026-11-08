@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { PasswordCredentialService } from './password-credential.service';
+import { AuthIdentifierService } from './auth-identifier.service';
 import {
   AuthIdentifierEntity,
   AuthRefreshTokenEntity,
@@ -29,12 +30,16 @@ import {
     PasswordHasherService,
     PasswordPolicyService,
     TokenCryptoService,
+    PasswordCredentialService,
+    AuthIdentifierService,
   ],
   exports: [
     OpaqueTokenService,
     PasswordHasherService,
     PasswordPolicyService,
     TokenCryptoService,
+    PasswordCredentialService,
+    AuthIdentifierService,
   ],
 })
 export class AuthModule {}
