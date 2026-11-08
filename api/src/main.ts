@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
-
+import cookieParser from 'cookie-parser';
 import { setupSwagger, ValidationException } from '@common/api';
 import { EnvService } from '@common/config';
 import { AppModule } from '@root/app.module';
@@ -10,7 +10,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule.register(), {
     bufferLogs: true,
   });
-
+  app.use(cookieParser());
   app.useLogger(app.get(Logger));
   app.flushLogs();
 

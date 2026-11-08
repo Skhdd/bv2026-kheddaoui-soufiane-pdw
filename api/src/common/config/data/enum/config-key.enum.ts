@@ -26,4 +26,9 @@ export enum ConfigKey {
   DbMigration = 'DB_MIGRATION',
   DbLog = 'DB_LOG',
   DbSchema = 'DB_SCHEMA',
+  JwtIssuer = 'JWT_ISSUER',
+  JwtAudience = 'JWT_AUDIENCE',
+  JwtPrivateKeyPath = 'JWT_PRIVATE_KEY_PATH',
+  JwtPublicKeyPath = 'JWT_PUBLIC_KEY_PATH',
+  OpaqueTokenHmacKeyPath = 'OPAQUE_TOKEN_HMAC_KEY_PATH',
 }

@@ -9,7 +9,9 @@ export class EnvService {
   constructor(
     private readonly configService: ConfigService<ValidatedEnvironment, true>,
   ) {}
-
+  get opaqueTokenHmacKeyPath(): string {
+    return this.get(ConfigKey.OpaqueTokenHmacKeyPath);
+  }
   get appMode(): AppMode {
     return this.get(ConfigKey.NodeEnv);
   }
@@ -110,5 +112,21 @@ export class EnvService {
 
   get<T extends keyof ValidatedEnvironment>(key: T): ValidatedEnvironment[T] {
     return this.configService.getOrThrow(key, { infer: true });
+  }
+
+  get jwtIssuer(): string {
+    return this.get(ConfigKey.JwtIssuer);
+  }
+
+  get jwtAudience(): string {
+    return this.get(ConfigKey.JwtAudience);
+  }
+
+  get jwtPrivateKeyPath(): string {
+    return this.get(ConfigKey.JwtPrivateKeyPath);
+  }
+
+  get jwtPublicKeyPath(): string {
+    return this.get(ConfigKey.JwtPublicKeyPath);
   }
 }

@@ -21,7 +21,7 @@ const appModeSchema = z
 
 const environmentSchema = z.object({
   NODE_ENV: appModeSchema,
-
+  OPAQUE_TOKEN_HMAC_KEY_PATH: z.string().min(1),
   APP_NAME: z.string().min(1).default('api'),
 
   APP_PORT: z.coerce.number().int().min(1).max(65535).default(3000),
@@ -80,6 +80,10 @@ const environmentSchema = z.object({
     .transform((value) => value === 'true'),
 
   DB_SCHEMA: z.string().min(1).default('public'),
+  JWT_ISSUER: z.string().min(1),
+  JWT_AUDIENCE: z.string().min(1),
+  JWT_PRIVATE_KEY_PATH: z.string().min(1),
+  JWT_PUBLIC_KEY_PATH: z.string().min(1),
 });
 
 export type ValidatedEnvironment = z.infer<typeof environmentSchema>;

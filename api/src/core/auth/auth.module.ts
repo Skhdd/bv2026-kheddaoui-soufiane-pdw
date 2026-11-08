@@ -8,6 +8,13 @@ import {
   PasswordCredentialEntity,
 } from './data';
 
+import {
+  OpaqueTokenService,
+  PasswordHasherService,
+  PasswordPolicyService,
+  TokenCryptoService,
+} from './security';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -16,6 +23,18 @@ import {
       AuthSessionEntity,
       AuthRefreshTokenEntity,
     ]),
+  ],
+  providers: [
+    OpaqueTokenService,
+    PasswordHasherService,
+    PasswordPolicyService,
+    TokenCryptoService,
+  ],
+  exports: [
+    OpaqueTokenService,
+    PasswordHasherService,
+    PasswordPolicyService,
+    TokenCryptoService,
   ],
 })
 export class AuthModule {}
