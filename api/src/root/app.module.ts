@@ -5,6 +5,8 @@ import { AppConfigModule } from '@common/config';
 import { DatabaseModule } from '@common/database';
 import { ApplicationLifecycleLogger, LoggingModule } from '@common/logging';
 import { AccountModule } from '@core/account';
+import { AuthModule } from '@core/auth';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -19,6 +21,7 @@ export class AppModule {
         ApiModule,
         DatabaseModule,
         AccountModule,
+        AuthModule,
       ],
       controllers: [AppController],
       providers: [AppService, ApplicationLifecycleLogger],
