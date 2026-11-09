@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -10,10 +11,16 @@ import { EntityManager, IsNull, MoreThan, Repository } from 'typeorm';
 
 import { AuthSessionEntity } from './data/entity/auth-session.entity';
 import { AuthRefreshTokenEntity } from './data/entity/auth-refresh-token.entity';
-import { OpaqueTokenService } from './security';
+import { CsrfTokenService, OpaqueTokenService } from './security';
 
 type RotationResult =
-  | { status: 'ok'; token: string; sessionId: string }
+  | {
+      status: 'ok';
+      token: string;
+      sessionId: string;
+      accountId: string;
+      accessVersion: number;
+    }
   | { status: 'invalid' }
   | { status: 'reused' };
 
@@ -23,9 +30,10 @@ export class AuthRefreshTokenService {
     @InjectRepository(AuthRefreshTokenEntity)
     private readonly refreshTokens: Repository<AuthRefreshTokenEntity>,
     private readonly opaqueTokens: OpaqueTokenService,
+    private readonly csrfTokens: CsrfTokenService,
   ) {}
 
-  // on bloque la session pendant les modification
+  // on bloque la session pendant les modifications
   private lockSession(
     manager: EntityManager,
     sessionId: string,
@@ -36,6 +44,22 @@ export class AuthRefreshTokenService {
       .setLock('pessimistic_write')
       .where('session.id = :sessionId', { sessionId })
       .getOne();
+  }
+
+  // on verifie le csrf avant de modifier la session
+  private assertCsrf(
+    session: AuthSessionEntity,
+    cookieToken?: string,
+    headerToken?: string,
+  ): void {
+    this.csrfTokens.assertValid(session.id, cookieToken, headerToken);
+
+    if (
+      !cookieToken ||
+      this.opaqueTokens.hash(cookieToken) !== session.csrfTokenHash
+    ) {
+      throw new ForbiddenException('Token CSRF invalide');
+    }
   }
 
   // on crée le premier token de la session
@@ -91,7 +115,16 @@ export class AuthRefreshTokenService {
   }
 
   // on remplace un token par un nouveau
-  async rotate(token: string): Promise<{ token: string; sessionId: string }> {
+  async rotate(
+    token: string,
+    csrfCookie?: string,
+    csrfHeader?: string,
+  ): Promise<{
+    token: string;
+    sessionId: string;
+    accountId: string;
+    accessVersion: number;
+  }> {
     if (!/^[A-Za-z0-9_-]{43}$/.test(token)) {
       throw new UnauthorizedException('Refresh token invalide');
     }
@@ -118,6 +151,9 @@ export class AuthRefreshTokenService {
         ) {
           return { status: 'invalid' };
         }
+
+        // on verifie le csrf avant la rotation
+        this.assertCsrf(session, csrfCookie, csrfHeader);
 
         const repository = manager.getRepository(AuthRefreshTokenEntity);
 
@@ -179,6 +215,8 @@ export class AuthRefreshTokenService {
           status: 'ok',
           token: newToken,
           sessionId: session.id,
+          accountId: session.accountId,
+          accessVersion: session.accessVersion,
         };
       },
     );
@@ -190,6 +228,8 @@ export class AuthRefreshTokenService {
     return {
       token: result.token,
       sessionId: result.sessionId,
+      accountId: result.accountId,
+      accessVersion: result.accessVersion,
     };
   }
 }
